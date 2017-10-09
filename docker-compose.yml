@@ -1,0 +1,52 @@
+version: '2'
+
+services:
+    web:
+        build:
+            context: ./images/bamboo
+            args:
+                - BAMBOO_VERSION=${BAMBOO_VERSION}
+        image: ianharrier/bamboo:${BAMBOO_VERSION}
+        restart: unless-stopped
+        depends_on:
+            - db
+        ports:
+            - ${WEB_PORT}:8085
+            - ${WEB_BROKER_PORT}:54663
+        environment:
+            - PROXY_HOSTNAME=${WEB_PROXY_HOSTNAME}
+            - PROXY_PORT=${WEB_PROXY_PORT}
+            - PROXY_SCHEME=${WEB_PROXY_SCHEME}
+            - TIMEZONE=${TIMEZONE}
+        volumes:
+            - ./volumes/web/data:/var/atlassian/application-data/bamboo
+    db:
+        image: postgres:9.6-alpine
+        restart: unless-stopped
+        environment:
+            - POSTGRES_DB=${DB_POSTGRES_DB}
+            - POSTGRES_USER=${DB_POSTGRES_USER}
+            - POSTGRES_PASSWORD=${DB_POSTGRES_PASSWORD}
+        volumes:
+            - ./volumes/db/data:/var/lib/postgresql/data
+    backup:
+        build:
+            context: ./images/backup
+            args:
+                - GLIBC_VERSION=2.25-r0
+                - COMPOSE_VERSION=1.15.0
+        image: ianharrier/bamboo-backup:1.0.7
+        restart: unless-stopped
+        environment:
+            - OPERATION=${BACKUP_OPERATION}
+            - CRON_EXP=${BACKUP_CRON_EXP}
+            - RETENTION=${BACKUP_RETENTION}
+            - HOST_PATH=${PWD}
+            - COMPOSE_PROJECT_NAME=${COMPOSE_PROJECT_NAME}
+            - TIMEZONE=${TIMEZONE}
+            - POSTGRES_DB=${DB_POSTGRES_DB}
+            - BAMBOO_USERNAME=${BACKUP_BAMBOO_USERNAME}
+            - BAMBOO_PASSWORD=${BACKUP_BAMBOO_PASSWORD}
+        volumes:
+            - ./:${PWD}
+            - /var/run/docker.sock:/var/run/docker.sock

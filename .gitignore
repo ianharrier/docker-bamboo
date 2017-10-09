@@ -1,0 +1,5 @@
+backups
+volumes/db/data
+volumes/web/data
+.env
+.env.bak

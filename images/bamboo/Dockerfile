@@ -19,6 +19,7 @@ RUN set -ex \
 ARG BAMBOO_VERSION
 ARG WEB_RUN_USER
 ARG WEB_RUN_GROUP
+ARG PKGS
 
 ENV BAMBOO_HOME=/var/atlassian/application-data/bamboo
 ENV BAMBOO_INSTALL=/opt/atlassian/bamboo
@@ -29,7 +30,6 @@ RUN set -ex \
         && apk --no-cache add \
                bash \
                curl \
-               docker \
                tar \
         && mkdir -p                           "${BAMBOO_INSTALL}" \
         && curl --location --retry 3 \
@@ -43,7 +43,9 @@ RUN set -ex \
         && chmod -R u=rwx,go-rwx              "${BAMBOO_HOME}" \
         && apk --no-cache del \
                curl \
-               tar
+               tar \
+        && apk --no-cache add \
+               ${PKGS}
 
 EXPOSE 8085 54663
 

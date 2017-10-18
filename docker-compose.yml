@@ -8,6 +8,7 @@ services:
                 - BAMBOO_VERSION=${BAMBOO_VERSION}
                 - WEB_RUN_USER=${WEB_RUN_USER}
                 - WEB_RUN_GROUP=${WEB_RUN_GROUP}
+                - PKGS=${WEB_PKGS}
         image: ianharrier/bamboo:${BAMBOO_VERSION}
         restart: unless-stopped
         depends_on:

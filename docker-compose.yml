@@ -6,6 +6,8 @@ services:
             context: ./images/bamboo
             args:
                 - BAMBOO_VERSION=${BAMBOO_VERSION}
+                - WEB_RUN_USER=${WEB_RUN_USER}
+                - WEB_RUN_GROUP=${WEB_RUN_GROUP}
         image: ianharrier/bamboo:${BAMBOO_VERSION}
         restart: unless-stopped
         depends_on:
@@ -20,6 +22,7 @@ services:
             - TIMEZONE=${TIMEZONE}
         volumes:
             - ./volumes/web/data:/var/atlassian/application-data/bamboo
+            - /var/run/docker.sock:/var/run/docker.sock
     db:
         image: postgres:9.6-alpine
         restart: unless-stopped

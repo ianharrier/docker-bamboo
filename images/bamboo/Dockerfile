@@ -17,16 +17,19 @@ RUN set -ex \
 #-------------------------------------------------------------------------------
 
 ARG BAMBOO_VERSION
+ARG WEB_RUN_USER
+ARG WEB_RUN_GROUP
 
 ENV BAMBOO_HOME=/var/atlassian/application-data/bamboo
 ENV BAMBOO_INSTALL=/opt/atlassian/bamboo
-ENV RUN_USER=daemon
-ENV RUN_GROUP=daemon
+ENV RUN_USER=${WEB_RUN_USER}
+ENV RUN_GROUP=${WEB_RUN_GROUP}
 
 RUN set -ex \
         && apk --no-cache add \
                bash \
                curl \
+               docker \
                tar \
         && mkdir -p                           "${BAMBOO_INSTALL}" \
         && curl --location --retry 3 \

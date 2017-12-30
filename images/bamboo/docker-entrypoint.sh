@@ -1,9 +1,11 @@
 #!/bin/sh
 set -e
 
-echo "[I] Setting permissions on Bamboo home directory."
-chown -R ${RUN_USER}:${RUN_GROUP}  "${BAMBOO_HOME}"
-chmod -R u=rwx,go-rwx              "${BAMBOO_HOME}"
+if [ "$TIMEZONE" ]; then
+    echo "[I] Setting the time zone."
+    cp "/usr/share/zoneinfo/$TIMEZONE" /etc/localtime
+    echo "$TIMEZONE" > /etc/timezone
+fi
 
 if [ "$PROXY_HOSTNAME" -a "$PROXY_PORT" -a "$PROXY_SCHEME" ]; then
     PROXY_STRING="proxyName=\"$PROXY_HOSTNAME\" proxyPort=\"$PROXY_PORT\" scheme=\"$PROXY_SCHEME\""
@@ -13,11 +15,9 @@ if [ "$PROXY_HOSTNAME" -a "$PROXY_PORT" -a "$PROXY_SCHEME" ]; then
     fi
 fi
 
-if [ "$TIMEZONE" ]; then
-    echo "[I] Setting the time zone."
-    cp "/usr/share/zoneinfo/$TIMEZONE" /etc/localtime
-    echo "$TIMEZONE" > /etc/timezone
-fi
+echo "[I] Setting permissions on Bamboo home directory."
+chown -R ${RUN_USER}:${RUN_GROUP}  "${BAMBOO_HOME}"
+chmod -R u=rwx,go-rwx              "${BAMBOO_HOME}"
 
 echo "[I] Entrypoint tasks complete. Starting Bamboo."
 exec su-exec ${RUN_USER} "$@"

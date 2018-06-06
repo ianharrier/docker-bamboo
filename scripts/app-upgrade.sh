@@ -21,7 +21,7 @@ echo "=== Updating environment file. ===========================================
 OLD_BAMBOO_VERSION=$(grep ^BAMBOO_VERSION= .env | cut -d = -f 2)
 NEW_BAMBOO_VERSION=$(grep ^BAMBOO_VERSION= .env.template | cut -d = -f 2)
 echo "[I] Upgrading Bamboo from '$OLD_BAMBOO_VERSION' to '$NEW_BAMBOO_VERSION'."
-sed -i.bak "s/^BAMBOO_VERSION=.*/BAMBOO_VERSION=$NEW_BAMBOO_VERSION/g" .env
+sed -i.bak -e "s/^BAMBOO_VERSION=.*/BAMBOO_VERSION=$NEW_BAMBOO_VERSION/g" .env
 
 echo "=== Deleting old images. ======================================================="
 IMAGE_BACKUP=$(docker images ianharrier/bamboo-backup -q)

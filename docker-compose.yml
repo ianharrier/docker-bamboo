@@ -34,7 +34,7 @@ services:
             - POSTGRES_USER=${DB_POSTGRES_USER}
             - POSTGRES_PASSWORD=${DB_POSTGRES_PASSWORD}
         volumes:
-            - ./volumes/db/data:/var/lib/postgresql/data:Z
+            - ./volumes/db/data:/var/lib/postgresql/data:z
     cron:
         build:
             context: ./images/cron

@@ -57,14 +57,12 @@ CMD ["./bin/start-bamboo.sh","-fg"]
 #  Scripts
 #-------------------------------------------------------------------------------
 
-RUN set -ex \
-        && apk --no-cache add \
-               su-exec \
-               tzdata
-
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 
 RUN set -ex \
+        && apk --no-cache add \
+               su-exec \
+               tzdata \
         && chmod +x /usr/local/bin/docker-entrypoint
 
 ENTRYPOINT ["docker-entrypoint"]
